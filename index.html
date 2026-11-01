@@ -1,26 +1,86 @@
-MAXEY MOD1K
-UI PROTOTYPE
-Oxide Survival — standalone interface concept. Not connected to the game or its servers.
-
-AIM VISUALIZATION
-
-FOV circle
-
-Circle size
-120 px
-
-This is a visual-only FOV preview. It does not track, select, or aim at players.
-
-DIAGNOSTICS MOCKUP
-
-FPS display preview
-60 FPS
-Network status preview
-Not connected
-Player diagnostics
-Demo only
-ITEM CATALOG CONCEPT
-
-A searchable item-list interface can be added when a legitimate game item catalogue is available. This prototype does not spawn items or send server commands.
-
-View prototype status
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080d18">
+<title>MAXEY MOD1K — UI Prototype</title>
+<style>
+:root{color-scheme:dark;--bg:#080d18;--panel:#101a2b;--blue:#269bff;--blue2:#65bdff;--muted:#8caed5}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#102442 0%,#080d18 60%);font:15px system-ui,-apple-system,sans-serif;color:#eaf4ff;min-height:100vh}
+main{max-width:520px;margin:auto;padding:24px 16px 40px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+h1{font-size:25px;letter-spacing:.08em;color:var(--blue2);margin:0}
+.pill{font-size:11px;border:1px solid #24629a;color:#9bd3ff;border-radius:999px;padding:6px 9px;letter-spacing:.08em}
+.note{color:var(--muted);font-size:12px;margin:0 0 18px}
+.panel{background:linear-gradient(160deg,#111e32,#0c1422);border:1px solid #1c4770;border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 12px 35px #0006}
+h2{font-size:13px;letter-spacing:.12em;color:#8fcaff;margin:0 0 14px}
+.control{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid #1b2b40}
+.control:last-child{border-bottom:0}
+label{font-size:14px}
+input[type=checkbox]{width:20px;height:20px;accent-color:var(--blue)}
+input[type=range]{width:100%;accent-color:var(--blue)}
+.rangehead{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin:8px 0}
+.stage{height:230px;display:grid;place-items:center;position:relative;border-radius:14px;background:radial-gradient(circle,#122b49,#09111e 70%);overflow:hidden}
+.crosshair{position:absolute;width:22px;height:22px}
+.crosshair:before,.crosshair:after{content:"";position:absolute;background:#b9e2ff}
+.crosshair:before{width:22px;height:1px;top:10px}
+.crosshair:after{height:22px;width:1px;left:10px}
+#fov{border:2px solid var(--blue);border-radius:50%;width:120px;height:120px;box-shadow:0 0 16px #269bff55}
+button{border:1px solid #24629a;background:#102c49;color:#d9efff;padding:10px 13px;border-radius:11px;font-weight:600}
+button:active{transform:scale(.98)}
+.float{position:fixed;right:18px;bottom:22px;border-radius:50%;width:58px;height:58px;background:#0e3153;border:1px solid #4aaeff;color:#bce4ff;font-weight:800;box-shadow:0 0 24px #269bff66}
+.small{color:var(--muted);font-size:12px;line-height:1.5}
+#menu{transition:opacity .18s}
+.hidden{display:none}
+footer{text-align:center;color:#6686aa;font-size:11px;margin-top:18px}
+</style>
+</head>
+<body>
+<main>
+<header><h1>MAXEY MOD1K</h1><span class="pill">UI PROTOTYPE</span></header>
+<p class="note">Oxide Survival — standalone interface concept. Not connected to the game or its servers.</p>
+<section id="menu">
+  <div class="panel">
+    <h2>AIM VISUALIZATION</h2>
+    <div class="control"><label for="fovToggle">FOV circle</label><input id="fovToggle" type="checkbox" checked></div>
+    <div class="rangehead"><label for="fovSize">Circle size</label><output id="sizeValue">120 px</output></div>
+    <input id="fovSize" type="range" min="40" max="220" step="5" value="120">
+    <div class="stage"><div id="fov"></div><div class="crosshair"></div></div>
+    <p class="small">This is a visual-only FOV preview. It does not track, select, or aim at players.</p>
+  </div>
+  <div class="panel">
+    <h2>DIAGNOSTICS MOCKUP</h2>
+    <div class="control"><label>FPS display preview</label><strong>60 FPS</strong></div>
+    <div class="control"><label>Network status preview</label><strong>Not connected</strong></div>
+    <div class="control"><label>Player diagnostics</label><strong>Demo only</strong></div>
+  </div>
+  <div class="panel">
+    <h2>ITEM CATALOG CONCEPT</h2>
+    <p class="small">A searchable item-list interface can be added when a legitimate game item catalogue is available. This prototype does not spawn items or send server commands.</p>
+    <button id="catalogInfo">View prototype status</button>
+    <p id="status" class="small" aria-live="polite"></p>
+  </div>
+</section>
+<button class="float" id="floatButton" aria-label="Toggle menu">M</button>
+<footer>MAXEY MOD1K • local UI prototype • v0.1</footer>
+</main>
+<script>
+const toggle=document.getElementById('fovToggle');
+const circle=document.getElementById('fov');
+const range=document.getElementById('fovSize');
+const output=document.getElementById('sizeValue');
+function updateCircle(){circle.style.display=toggle.checked?'block':'none';circle.style.width=range.value+'px';circle.style.height=range.value+'px';output.value=range.value+' px';}
+toggle.addEventListener('change',updateCircle);
+range.addEventListener('input',updateCircle);
+updateCircle();
+document.getElementById('floatButton').addEventListener('click',()=>{
+  document.getElementById('menu').classList.toggle('hidden');
+});
+document.getElementById('catalogInfo').addEventListener('click',()=>{
+  document.getElementById('status').textContent='Prototype ready. No game integration or server actions are active.';
+});
+</script>
+</body>
+</html>
